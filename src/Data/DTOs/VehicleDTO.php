@@ -11,7 +11,7 @@ class VehicleDTO
 
     public function __construct(
         private string $name,
-        private float $maxSpeed,
+        private float|int $maxSpeed,
         private string $unit,
     )
     {
@@ -28,7 +28,7 @@ class VehicleDTO
         return $this->name;
     }
 
-    public function getMaxSpeed(): int
+    public function getMaxSpeed(): int|float
     {
         return $this->maxSpeed;
     }
