@@ -71,21 +71,6 @@ class SpeedUnitConverter implements SpeedUnitConverterInterface
         return $this->conversionMultiplier[$fromUnit][$toUnit] * $speed;
     }
 
-    public function addConversionMultiplier(
-        string $fromUnit,
-        string $toUnit,
-        float  $factor
-    ): void
-    {
-        if (!isset($this->conversionMultiplier[$fromUnit][$toUnit])) {
-            $this->conversionMultiplier[$fromUnit][$toUnit] = $factor;
-        }
-
-        if (!isset($this->conversionMultiplier[$toUnit][$fromUnit])) {
-            $this->conversionMultiplier[$toUnit][$fromUnit] = 1 / $factor;
-        }
-    }
-
     /**
      * Map to unique alias for different possible writings
      *
