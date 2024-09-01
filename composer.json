@@ -15,7 +15,8 @@
   },
   "require-dev": {
     "ergebnis/composer-normalize": "^2.42",
-    "phpunit/phpunit": "^10.1"
+    "pestphp/pest": "^2.35",
+    "mockery/mockery": "^1.6"
   },
   "autoload-dev": {
     "psr-4": {
@@ -24,7 +25,8 @@
   },
   "config": {
     "allow-plugins": {
-      "ergebnis/composer-normalize": true
+      "ergebnis/composer-normalize": true,
+      "pestphp/pest-plugin": true
     },
     "optimize-autoloader": true
   },
