@@ -6,24 +6,20 @@ use App\Contracts\Repositories\VehicleRepositoryInterface;
 use App\Contracts\Utilities\JsonHandlerInterface;
 use App\Contracts\Utilities\SpeedUnitConverterInterface;
 use App\Enums\UnitsEnum;
-use App\Utilities\JsonHandler;
-use App\Utilities\SpeedUnitConverter;
 use App\Data\DTOs\VehicleDTO;
 
 class VehicleRepository implements VehicleRepositoryInterface
 {
-    private JsonHandlerInterface $jsonHandler;
-    private SpeedUnitConverterInterface $speedConverter;
     private array $allowedParams = [
         'name',
         'maxSpeed',
         'unit'
     ];
-    public function __construct()
+    public function __construct(
+        private JsonHandlerInterface $jsonHandler,
+        private SpeedUnitConverterInterface $speedConverter
+    )
     {
-        $this->initJsonHandler();
-
-        $this->initConverter();
     }
 
     /**
@@ -41,7 +37,11 @@ class VehicleRepository implements VehicleRepositoryInterface
 
     public function speedInKmPerHour(VehicleDTO $vehicleDTO)
     {
-        // TODO
+        return $this->speedConverter->convert(
+            $vehicleDTO->getMaxSpeed(),
+            $vehicleDTO->getUnit(),
+            UnitsEnum::KM_PER_HOUR
+        );
     }
 
     private function initVehicle(array $vehicleData): VehicleDTO|null
@@ -56,20 +56,10 @@ class VehicleRepository implements VehicleRepositoryInterface
         return new VehicleDTO(...$vehicleData);
     }
 
-    private function initJsonHandler(): void
-    {
-        $this->jsonHandler = new JsonHandler();
-    }
-
     private function paramsMatch(array $vehicleData): bool
     {
         return (count($this->allowedParams) === count(array_keys($vehicleData))) &&
             empty(array_diff($this->allowedParams, array_keys($vehicleData)));
-    }
-
-    private function initConverter(): void
-    {
-        $this->speedConverter = new SpeedUnitConverter();
     }
 
     private function normalizeSpeed(array &$vehicleData): void
