@@ -16,11 +16,10 @@ class UI implements UIInterface
     private const RACE_IS_RUNNING = PHP_EOL . '>>> Race is running! >>>' . PHP_EOL;
     private const RACE_FINISHED = PHP_EOL . '>>> Race is finished!' . PHP_EOL;
 
-    private CommandLineInterface $cliUtility;
-
-    public function __construct()
+    public function __construct(
+        private readonly CommandLineInterface $cli,
+    )
     {
-        $this->initCliUtility();
     }
 
     /**
@@ -28,7 +27,7 @@ class UI implements UIInterface
      */
     public function presentOutput(string $output): void
     {
-        $this->cliUtility->presentOutput($output);
+        $this->cli->presentOutput($output);
     }
 
     /**
@@ -36,7 +35,7 @@ class UI implements UIInterface
      */
     public function getInput(string $prompt): string|false
     {
-        return $this->cliUtility->getInput($prompt);
+        return $this->cli->getInput($prompt);
     }
 
     public function displayWelcome(): void
@@ -134,18 +133,12 @@ class UI implements UIInterface
     {
         $this->presentOutput(self::RACE_STARTED);
         $this->presentOutput(self::RACE_IS_RUNNING);
-        sleep(1);
         $this->presentOutput(self::RACE_FINISHED);
     }
 
     /**
      * ---------------- Private -------------------
      */
-
-    private function initCliUtility(): void
-    {
-        $this->cliUtility = new CommandLine();
-    }
 
     /**
      * Format the presentation of each vehicle data
@@ -182,18 +175,18 @@ class UI implements UIInterface
     ): string
     {
         return PHP_EOL . sprintf(
-            "Player $playerNumber, choose your vehicle (1-%d): ",
-            $vehiclesCount
-        );
+                "Player $playerNumber, choose your vehicle (1-%d): ",
+                $vehiclesCount
+            );
     }
 
     private function formatErroneousChoice(int $vehiclesCount): string
     {
         return PHP_EOL . sprintf(
-            "Invalid choice. Please enter a number between 1 and %d%s",
-            $vehiclesCount,
-            PHP_EOL
-        );
+                "Invalid choice. Please enter a number between 1 and %d%s",
+                $vehiclesCount,
+                PHP_EOL
+            );
     }
 
     private function formatRaceTimesTitle(): string
@@ -202,7 +195,7 @@ class UI implements UIInterface
     }
 
     private function formatRaceTime(
-        string     $name,
+        string           $name,
         string|float|int $time
     ): string
     {
